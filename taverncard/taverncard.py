@@ -1,0 +1,86 @@
+"""
+Tavern Cards, as defined by Character Card Spec V2:
+    https://github.com/malfoyslastname/character-card-spec-v2
+"""
+
+from dataclasses import dataclass, field
+from typing import Any, Dict, List, Literal, Optional, Union
+
+from dataclasses_json import Undefined, dataclass_json
+
+
+@dataclass_json
+@dataclass
+class TavernCardV1:
+    name: str = ""
+    description: str = ""
+    personality: str = ""
+    scenario: str = ""
+    first_mes: str = ""
+    mes_example: str = ""
+
+
+@dataclass_json
+@dataclass
+class CharacterBookEntry:
+    keys: List[str] = field(default_factory=lambda: [])
+    content: str = ""
+    extensions: Dict[str, Any] = field(default_factory=lambda: dict())
+    enabled: bool = True
+    insertion_order: Union[int, float] = 0
+    case_sensitive: Optional[bool] = None
+
+    name: Optional[str] = None
+    priority: Optional[Union[int, float]] = None
+
+    id: Optional[Union[int, float]] = None
+    comment: Optional[str] = None
+    selective: Optional[bool] = None
+    secondary_keys: Optional[List[str]] = None
+    constant: Optional[bool] = None
+    position: Optional[Literal["before_char", "after_char"]] = None
+
+
+@dataclass_json
+@dataclass
+class CharacterBook:
+    name: Optional[str] = None
+    description: Optional[str] = None
+    scan_depth: Optional[int] = None
+    token_budget: Optional[Union[int, float]] = None
+    recursive_scanning: Optional[bool] = None
+    extensions: Dict[str, Any] = field(default_factory=lambda: dict())
+    entries: List[CharacterBookEntry] = field(default_factory=lambda: [])
+
+
+@dataclass_json
+@dataclass
+class TavernCardV2Data:
+    name: str = ""
+    description: str = ""
+    personality: str = ""
+    scenario: str = ""
+    first_mes: str = ""
+    mes_example: str = ""
+
+    # New Fields Start Here
+    creator_notes: str = ""
+    system_prompt: str = ""
+    post_history_instructions: str = ""
+    alternate_greetings: List[str] = field(default_factory=lambda: [])
+    character_book: Optional[CharacterBook] = None
+
+    # May 8th additions
+    tags: List[str] = field(default_factory=lambda: [])
+    creator: str = ""
+    character_version: str = ""
+
+
+@dataclass_json(undefined=Undefined.EXCLUDE)
+@dataclass
+class TavernCardV2:
+    spec: Literal["chara_card_v2"] = "chara_card_v2"
+    spec_version: Literal["2.0"] = "2.0"
+    data: TavernCardV2Data = field(
+        default_factory=lambda: TavernCardV2Data(),
+    )
